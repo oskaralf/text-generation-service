@@ -1,11 +1,19 @@
+from fastapi import APIRouter
+from prisma import Prisma
 import openai
 from dotenv import load_dotenv
 import os
 
 from src.models.languages import Language
 
-load_dotenv()
-api_key = os.getenv("OPENAI_API")
+router = APIRouter()
+prisma = Prisma()
+
+
+@router.get("/generate_text")
+async def generate_text(user: str):
+    print('fuck u', user)
+    return 'fuck u', user
 
 
 def generate_text():

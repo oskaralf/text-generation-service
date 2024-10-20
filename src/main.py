@@ -7,13 +7,15 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 
 
-
+story = """Once upon a time, there was a little restaurant that served delicious fruits. The friendly owner, Maria, decided to add some new exotic fruits to the menu to surprise her customers. She went to the market and bought some kiwis, mangos, and papayas, in addition to her usual apples, bananas, and cherries.
+She quickly turned the fruits into tasty dishes. Maria made a colorful kiwi salad with a zesty lime dressing. The mango smoothie was sweet and refreshing, perfect"""
 
 target_language = "English"
 familiar_words = ["apple", "banana", "cherry"]
 new_words = ["kiwi", "mango", "papaya"]
 cefr = "A2"
 theme = "Restaurant"
+
 
 def build_prompt():
     prompt = (
@@ -40,7 +42,8 @@ def main():
     )
 
     print("GENERATED TEXT:")
-    print(response['choices'][0]['message']['content'])
+    print(response.choices[0].message.content)
+
 
 if __name__ == "__main__":
     main()

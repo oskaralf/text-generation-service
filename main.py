@@ -1,8 +1,6 @@
-from fastapi import FastAPI
-from prisma import Prisma
-import asyncio
+from api import Api
 
-router = FastAPI()
 
-async def main()
-
+if __name__ == "__main__":
+    api = Api()
+    api.run()
