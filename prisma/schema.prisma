@@ -22,23 +22,24 @@ model User {
   level      Float?
   interests  String?
   history    history[]
-  dictionary dictionary[]
+  dictionary words[]
 }
 
 model history {
   id     String   @id @default(cuid())
-  user   User     @relation(fields: [userId], references: [name])
   level  Float
   date   DateTime @default(now())
-  userId String
+  userName String
+
+  user   User     @relation(fields: [userName], references: [name])
 }
 
-model dictionary {
+model words {
   id       String @id @default(cuid())
   word     String
   meaning  String
   language String
-  level    Float
-  user     User   @relation(fields: [userId], references: [name])
-  userId   String
+  userName String
+
+  user     User   @relation(fields: [userName], references: [name])
 }
