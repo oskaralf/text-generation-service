@@ -5,7 +5,7 @@ import spacy
 from src.models.languages import Language
 
 
-def generate_dcrf_score(text: str, vocab: list[str], language: Language = Language('italian')) -> float:
+def generate_dcrf_score(text: str, vocab: list[str], language: Language) -> float:
     sentences = get_sentences_from_text(text)
     words = get_words_from_text(text)
 

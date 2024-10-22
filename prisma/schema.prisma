@@ -22,7 +22,7 @@ model User {
   level      Float?
   interests  String?
   history    history[]
-  dictionary words[]
+  savedWords words[]
 }
 
 model history {
@@ -37,7 +37,7 @@ model history {
 model words {
   id       String @id @default(cuid())
   word     String
-  meaning  String
+  translation  String
   language String
   userName String
 
