@@ -25,7 +25,18 @@ async def test_prisma():
 async def create_user():
     await prisma.connect()
 
-    user = await prisma.user.create(data={"name": "Felix"})
+    user = await prisma.user.create(data={"name": "oskar", "language": "english",
+                                          "interests": "music,food,sports", "level": 2.0})
+
+    await prisma.disconnect()
+    return user
+
+
+@router.delete("/test/delete_user")
+async def delete_user():
+    await prisma.connect()
+
+    user = await prisma.user.delete(where={"name": "oskar"})
 
     await prisma.disconnect()
     return user

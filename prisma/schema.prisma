@@ -16,15 +16,29 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  name      String     @unique
-  language  String?
-  level     Float?
-  interests Interest[] @relation("UserInterests")
+  id         String       @id @default(cuid())
+  name       String       @unique
+  language   String?
+  level      Float?
+  interests  String?
+  history    history[]
+  dictionary dictionary[]
 }
 
-model Interest {
-  id   String   @id @default(cuid())
-  name String   @unique
-  users User[] @relation("UserInterests")
+model history {
+  id     String   @id @default(cuid())
+  user   User     @relation(fields: [userId], references: [name])
+  level  Float
+  date   DateTime @default(now())
+  userId String
+}
+
+model dictionary {
+  id       String @id @default(cuid())
+  word     String
+  meaning  String
+  language String
+  level    Float
+  user     User   @relation(fields: [userId], references: [name])
+  userId   String
 }
