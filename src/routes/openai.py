@@ -14,7 +14,6 @@ prisma = Prisma()
 @router.get("/generate_text")
 async def generate_text(user: str, context: str, text_type: str):
     text = await get_text_for_user(user, context, text_type)
-    print('wtf', text)
     return text
 
 
