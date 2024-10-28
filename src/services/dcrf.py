@@ -5,11 +5,11 @@ import spacy
 from src.models.languages import Language
 
 
-def generate_dcrf_score(text: str, vocab: list[str], language: Language) -> float:
+def generate_dcrf_score(text: str, language: Language = Language('italian')) -> float:
     sentences = get_sentences_from_text(text)
     words = get_words_from_text(text)
 
-    difficult_word_count = count_difficult_words(words, vocab, language)
+    difficult_word_count = count_difficult_words(words, language)
     total_words = len(words)
     total_sentences = len(sentences)
 
@@ -30,9 +30,10 @@ def get_words_from_text(text: str) -> list[str]:
     return words
 
 
-def count_difficult_words(words: list[str], vocab, language: Language) -> int:
+def count_difficult_words(words: list[str], language: Language) -> int:
     count = 0
-    nlp = spacy.load('en_core_web_sm')
+    vocab = language.get_vocab()
+    nlp = language.nlp
     for word in words:
         print(word)
         clean_word = word.strip(",.!?:\"").lower()

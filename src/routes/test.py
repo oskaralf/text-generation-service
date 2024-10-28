@@ -26,7 +26,7 @@ async def create_user():
     await prisma.connect()
 
     user = await prisma.user.create(data={"name": "oskar", "language": "english",
-                                          "interests": "music,food,sports", "level": 2.0})
+                                          "interests": "music,food,sports", "level": 5.0})
 
     await prisma.disconnect()
     return user

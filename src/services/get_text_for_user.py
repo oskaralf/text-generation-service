@@ -5,6 +5,7 @@ from prisma import Prisma
 import pandas as pd
 
 from src.services.dcrf import generate_dcrf_score
+from src.models.languages import Language
 
 prisma = Prisma()
 
@@ -13,7 +14,7 @@ assistant_text = ("You are a helpful assistant for people learning a new languag
                   "based on their interests, language level, and the specific context and type of the text output."
                   "Please adapt the length of the text according to the level of the user,"
                   "i.e. shorter texts for beginners and longer texts for more advanced learners."
-                  "The level is a float between 0.0 and 10.0, where 0.0 means the user speaks absolutely and 10.0 is fluent.")
+                  "The level is measured as the DCRF score, which is based on the percentage of difficult words and the average sentence length.")
 
 
 def generate_prompt(user, context: str, text_type: str) -> str:
@@ -22,7 +23,7 @@ def generate_prompt(user, context: str, text_type: str) -> str:
     level = user.level
 
     prompt = (f"Language: {language}\n"
-              f"Level: 1.0"
+              f"Level: {level}\n"
               f"Interests: {interests}\n"
               f"Context: {context}\n"
               f"Text type: {text_type}\n")
@@ -30,16 +31,13 @@ def generate_prompt(user, context: str, text_type: str) -> str:
     return prompt
 
 
-def retrieve_text(prompt: str) -> str:
+def get_text_from_openai(messages: list) -> str:
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     openai.api_key = api_key
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": assistant_text},
-            {"role": "user", "content": prompt}
-        ],
+        messages=messages,
         max_tokens=200
     )
     text = response.choices[0].message.content
@@ -48,17 +46,28 @@ def retrieve_text(prompt: str) -> str:
     return text
 
 
-async def generate_text(user: str, context: str, text_type: str) -> str:
+async def get_text_for_user(user: str, context: str, text_type: str) -> str:
     await prisma.connect()
     user = await prisma.user.find_unique(where={"name": user})
     await prisma.disconnect()
+    language = Language(user.language)
 
     prompt = generate_prompt(user, context, text_type)
-    text = retrieve_text(prompt)
+    messages = [
+        {"role": "system", "content": assistant_text},
+        {"role": "user", "content": prompt}
+    ]
+    text = get_text_from_openai(messages)
+    messages.append({"role": "assistant", "content": text})
+    dcrf_score = generate_dcrf_score(text, language)
+    """
+    while abs(dcrf_score - user.level) > 1:
+        if dcrf_score - user.level > 1:
+            messages.append({"role": "user", "content": f"The text is too difficult for the user, it scored a DCRF score of {dcrf_score} while the user needs {user.level}. Can you make the text a bit easier?"})
+        elif dcrf_score - user.level < -1:
+            messages.append({"role": "user", "content": f"The text is too easy for for the user, it scored a DCRF score of {dcrf_score} while the users needs {user.level}. Can you make the text a bit more challenging?"})
+        text = get_text_from_openai(messages)
+        dcrf_score = generate_dcrf_score(text, language)
+    """
 
-    df = pd.read_excel('/Users/felixdahl/dev/text-generation-service/vocab/en_m3.xls', engine='xlrd')
-    filtered_df = df[df['CEFR'].isin(['"A1"', '"A2"'])]
-    lemma_list = filtered_df['Word'].tolist()
-    dcrf_score = generate_dcrf_score(text, lemma_list)
-    print('DCRF score:', dcrf_score)
     return text
