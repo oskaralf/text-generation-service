@@ -6,8 +6,6 @@ prisma = Prisma()
 
 
 async def post_word_to_db(word: Word):
-    success = False
-    print('wtf')
     try:
         await prisma.connect()
         new_word = await prisma.words.create(
