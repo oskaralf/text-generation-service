@@ -1210,6 +1210,21 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyphen"
+version = "0.17.0"
+description = "Pure Python module to hyphenate text"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "pyphen-0.17.0-py3-none-any.whl", hash = "sha256:dad0b2e4aa80f6d70bf06711b2da36c47a756b933c1d0c4cbbab40f643a5958c"},
+    {file = "pyphen-0.17.0.tar.gz", hash = "sha256:1d13acd1ce37a384d7612954ae6c7801bb4c5316da0e2b937b2127ba702a3da4"},
+]
+
+[package.extras]
+doc = ["sphinx", "sphinx_rtd_theme"]
+test = ["pytest", "ruff"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -1632,6 +1647,20 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "textstat"
+version = "0.7.4"
+description = "Calculate statistical features from text"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "textstat-0.7.4-py3-none-any.whl", hash = "sha256:53a36cbcf4d21312d28cdc5a316917031667a57303e375a184d83fd52b95a407"},
+]
+
+[package.dependencies]
+pyphen = "*"
+setuptools = "*"
+
+[[package]]
 name = "thinc"
 version = "8.3.2"
 description = "A refreshing functional take on deep learning, compatible with your favorite libraries"
@@ -1940,4 +1969,4 @@ test = ["pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "7d9bd6bc1fc917605d4521a77c2497e0de177bfd00c56388e751c9b7d718b0dd"
+content-hash = "72b61fbbdc8dadb4136277906bcb63966888c9f3e7c1c43398e6cbed0c0cc773"

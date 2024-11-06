@@ -10,6 +10,7 @@ prisma = Prisma()
 
 @router.post("/save-word")
 async def save_word(word: Word):
+    print(word)
     success = await post_word_to_db(word)
     if not success:
         raise HTTPException(status_code=500, detail="Failed to save word")

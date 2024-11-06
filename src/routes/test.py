@@ -14,19 +14,21 @@ async def test():
 @router.get("/test/get_users")
 async def test_prisma():
     await prisma.connect()
-
-    users = await prisma.user.find_many()
+    user = await prisma.user.find_unique(where={"name": "anders"}, include={"savedWords": True, "history": True})
+    print([word.word for word in user.savedWords])
 
     await prisma.disconnect()
-    return users
+    return user
 
 
 @router.post("/test/create_user")
 async def create_user():
     await prisma.connect()
 
-    user = await prisma.user.create(data={"name": "oskar", "language": "english",
-                                          "interests": "music,food,sports", "level": 5.0})
+    user = await prisma.user.create(data={"name": "dessan",
+                                   "level": 0.3,
+                                   "language": "english",
+                                   "interests": "baking, hiking, knitting, travelling"})
 
     await prisma.disconnect()
     return user

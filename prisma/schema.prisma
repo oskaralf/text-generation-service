@@ -16,30 +16,48 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(cuid())
-  name       String       @unique
+  id         String    @id @default(cuid())
+  name       String    @unique
   language   String?
   level      Float?
   interests  String?
-  history    history[]
-  savedWords words[]
+
+  history    History[]
+  savedWords Words[]
+  Text       Text[]
 }
 
-model history {
-  id     String   @id @default(cuid())
-  level  Float
-  date   DateTime @default(now())
+model History {
+  id       String   @id @default(cuid())
+  language String?
+  level    Float
+  date     DateTime @default(now())
   userName String
 
-  user   User     @relation(fields: [userName], references: [name])
+  user     User @relation(fields: [userName], references: [name])
 }
 
-model words {
-  id       String @id @default(cuid())
-  word     String
-  translation  String
-  language String
-  userName String
+model Words {
+  id          String @id @default(cuid())
+  word        String
+  translation String
+  language    String
+  userName    String
+  textId      String
 
-  user     User   @relation(fields: [userName], references: [name])
+  text        Text @relation(fields: [textId], references: [id])
+  user        User @relation(fields: [userName], references: [name])
+}
+
+model Text {
+  id         String   @id @default(cuid())
+  language   String?
+  content    String
+  totalWords Float
+  level      Float
+  userName   String
+  date       DateTime @default(now())
+
+  user       User    @relation(fields: [userName], references: [name])
+  words      Words[]
 }
