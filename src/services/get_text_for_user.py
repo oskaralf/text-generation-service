@@ -19,14 +19,19 @@ assistant_text = ("You are a helpful assistant for people learning a new languag
                   "The level is measured as the DCRF score, which is based on the percentage of difficult words and the average sentence length.")
 """
 assistant_text = ("You are a expert linguistic coach for people learning a new language."
-                  "You will help them practice their reading skills by generating texts "
+                  "You will help them practice their reading skills by generating texts in a specified language "
                   "based on their interests, language level, and the specific context and type of the text output."
                   "Please adapt the length of the text according to the level of the user,"
                   "i.e. shorter texts for beginners and longer texts for more advanced learners."
-                  "The level is a value between 0 and 1. Assume that 0 is absolute beginner and 1 is a native speaker."
-                  "The level is measured based on lexical diversity (unique words/ total words), normalized flesch kincaid grade, subordinate count/sentence count and finally normalized average sentence length. The formula is as follows:"
-                  "difficulty score = flesch_kincaid_grade/ 12) * 0.4 + (1 - lexical diversity) * 0.3 + subordination count/sentence count * 0.25 + average sentence length/ 25 * 0.05. ")
+                  "The level is a value between 0 and 1. Assume that 0 is absolute beginner and 1 is a native speaker.")
 
+english_assistant_text = ("The level is measured based on lexical diversity (unique words/ total words), "
+                          "normalized flesch kincaid grade, subordinate count/sentence count and finally normalized "
+                          "average sentence length. The formula is as follows: "
+                          "difficulty score = flesch_kincaid_grade/ 12) * 0.4 + (1 - lexical diversity) * 0.3 + subordination count/sentence count * 0.25 + average sentence length/ 25 * 0.05. ")
+
+spanish_assistant_text = ("The level is measured based on sentence length and syllable count per word in the text."
+                          "The formula is as follows: 206.84 - (0.6 * syllable count) - 1.02 * word count. ")
 
 def generate_prompt(user, context: str, text_type: str) -> str:
     language = user.language
@@ -70,8 +75,15 @@ async def get_text_for_user(user: str, context: str, text_type: str) -> str:
 
     prompt = generate_prompt(user, context, text_type)
     print(assistant_text + additional_words_query)
+
+    if user.language == "english":
+        formula = english_assistant_text
+    else:
+        formula = spanish_assistant_text
+
+
     messages = [
-        {"role": "system", "content": assistant_text + additional_words_query},
+        {"role": "system", "content": assistant_text + formula + additional_words_query},
         {"role": "user", "content": prompt}
     ]
     text = get_text_from_openai(messages)

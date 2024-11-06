@@ -39,7 +39,7 @@ async def login_user(user: User):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return user.name
+    return {'language': user.language}
 
 
 @router.post("/get-registration-sentence")
@@ -54,7 +54,6 @@ class ScoreRequest(BaseModel):
     rating: int
     sentence: str
     user: str
-    language: str
 
 
 @router.post("/set-initial-level")

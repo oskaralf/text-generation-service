@@ -72,22 +72,23 @@ def generate_overall_score(text: str, language: Language):
     text = text.replace("\n", " ")
     lex = lexical_complexity(text, language)
     syn = syntactic_complexity(text, language)
-    read = readability_metrics(text)
+    if language.name == 'english':
+        read = readability_metrics(text)
 
-    # Weighted difficulty score (customizable)
-    difficulty_score = (
-            (lex['lexical_diversity']) * 0.15 +  # High diversity = lower difficulty
-            (syn['avg_sentence_length'] / 25) * 0.05 +  # Normalize sentence length by a typical average (25)
-            (syn['subordination_count'] / syn['sentence_count']) * 0.25 +
-            (read['flesch_kincaid_grade'] / 12) * 0.55  # Normalize Flesch-Kincaid to a 12-grade scale
-    )
+        # Weighted difficulty score (customizable)
+        difficulty_score = (
+                (lex['lexical_diversity']) * 0.15 +  # High diversity = lower difficulty
+                (syn['avg_sentence_length'] / 25) * 0.05 +  # Normalize sentence length by a typical average (25)
+                (syn['subordination_count'] / syn['sentence_count']) * 0.25 +
+                (read['flesch_kincaid_grade'] / 12) * 0.55  # Normalize Flesch-Kincaid to a 12-grade scale
+        )
+    else:
+        fer_huerta = 206.84 - (0.60 * lex['tot_syllables']) - 1.02 * lex['word_count']
+        new_fer_huerta = (fer_huerta * -1 + 200) / 500
+        difficulty_score = new_fer_huerta
 
     # Return individual metrics and an overall score
     return {
-        'lexical_complexity': (1 - lex['lexical_diversity']),
-        'syntactic_complexity': (syn['avg_sentence_length'] / 25),
-        'subordination': (syn['subordination_count'] / syn['sentence_count']),
-        'readability_metrics': (read['flesch_kincaid_grade'] / 12),
         'overall_difficulty_score': round(difficulty_score, 3)
     }
 

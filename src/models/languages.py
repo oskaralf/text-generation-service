@@ -6,12 +6,13 @@ import pandas as pd
 
 language_to_nlp = {
     'italian': 'it_core_news_sm',
-    'english': 'en_core_web_sm'
+    'english': 'en_core_web_sm',
+    'spanish': 'es_core_news_sm'
 }
 
 language_to_file = {
     'italian': 'it_m3.xls',
-    'english': 'en_m3.xls'
+    'english': 'en_m3.xls',
 }
 
 

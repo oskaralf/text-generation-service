@@ -31,13 +31,13 @@ async def post_user_to_db(user: User):
     await prisma.disconnect()
     return success
 
-assistant_text = ('You are an expert at generating texts for users in a language which they are trying to learn. '
-                  'You are going to generate texts in order to assess a users overall level. The texts should be two sentences. '
-                  'I am going to provide a text, and the difficulty rating from a user on that sentence, '
+assistant_text = ('You are a linguistic expert, and designed to generate texts for users in a language which they are trying to learn. '
+                  'You are going to generate texts in order to assess a users overall level. The lenght of the text should be very short, increasing/decreasing with difficulty. '
+                  'I am going to provide a language, a text in that language, and the difficulty rating from a user on that sentence '
                   'on a 1-5 scale, 1 being "i dont understand anything" and 5 being "i understand everything". '
-                  'In turn, you are going to provide a new text which is aimed at suiting the level of the user by increasing or decreasing the text. '
+                  'In turn, you are going to provide a new text which is aimed at finding the level of the user by increasing or decreasing the text depending on the score. '
                   'Hence a 1 means that you need to decrease the difficulty by a lot, and a 5 means you need to increase difficulty by a lot. '
-                  'Only respond with the new text. The text should not be a variation of the previous text, come up with something new each time.')
+                  'Only respond with the new text in the specified language. The text should not be a variation of the previous text, come up with something new each time.')
 
 
 async def get_sentence_from_openai(request: SentenceHistoryRequest):
@@ -47,10 +47,11 @@ async def get_sentence_from_openai(request: SentenceHistoryRequest):
     ]
 
     for i in range(len(sentences)-1):
-        messages.append({"role": "user", "content": f"Sentence: {sentences[i].sentence}\nRating: {sentences[i].rating}"})
+        messages.append({"role": "user", "content": f"Language: {request.language}, Text: {sentences[i].sentence}\nRating: {sentences[i].rating}"})
         messages.append({"role": "assistant", "content": f"{request.sentenceHistory[i+1].sentence}"})
 
-    messages.append({"role": "user", "content": f"Sentence: {sentences[-1].sentence}\nRating: {sentences[-1].rating}"})
+    messages.append({"role": "user", "content": f"Language: {request.language}, Text: {sentences[-1].sentence}\nRating: {sentences[-1].rating}"})
+    print(messages)
 
     generated_sentence = get_text_from_openai(messages)
     return generated_sentence

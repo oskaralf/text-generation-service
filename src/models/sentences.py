@@ -9,3 +9,4 @@ class SentenceEntry(BaseModel):
 
 class SentenceHistoryRequest(BaseModel):
     sentenceHistory: List[SentenceEntry]
+    language: str
