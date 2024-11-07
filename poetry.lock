@@ -1647,6 +1647,17 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "syllapy"
+version = "0.7.2"
+description = "Calculate syllable counts for English words."
+optional = false
+python-versions = ">=3.6, <4"
+files = [
+    {file = "syllapy-0.7.2-py3-none-any.whl", hash = "sha256:198a7413033c32d7b31e21962efb3f284bcea80d3346e954b938ca1ebe6bee20"},
+    {file = "syllapy-0.7.2.tar.gz", hash = "sha256:e55a7ad97d8b232e174b83f91b8f9be0c355d2a8e1208c7f6229055189605564"},
+]
+
+[[package]]
 name = "textstat"
 version = "0.7.4"
 description = "Calculate statistical features from text"
@@ -1969,4 +1980,4 @@ test = ["pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "72b61fbbdc8dadb4136277906bcb63966888c9f3e7c1c43398e6cbed0c0cc773"
+content-hash = "3c9551dda7095c6136c5d93e9da3b2c2cba8f0e94ce2ec1cd61c966660959032"

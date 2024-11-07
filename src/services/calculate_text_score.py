@@ -7,6 +7,7 @@ import nltk
 from collections import Counter
 from nltk.corpus import stopwords
 import textstat  # For readability formulas
+import syllapy
 
 # Download necessary data for NLTK
 nltk.download('punkt_tab')
@@ -21,14 +22,27 @@ def lexical_complexity(text: str, language: Language):
     # Remove stopwords and punctuation
     words = [word for word in words if word.isalnum() and word.lower() not in stop_words]
 
+    tot_syll = sum(syllapy.count(word) for word in words)
+    pol_syll_count = sum(syllapy.count(word) for word in words if syllapy.count(word) >= 3)
+
     total_words = len(words)
+    avg_syllable = tot_syll / total_words
+
     unique_words = len(set(words))
     avg_word_length = sum(len(word) for word in words) / total_words
+
+    word_length_over_six = sum(len(word) for word in words if len(word) > 6) / total_words
+    one_syll_percentage = sum(syllapy.count(word) for word in words if syllapy.count(word) == 1)
 
     lexical_diversity = unique_words / total_words
 
     return {
         'word_count': total_words,
+        'over_six_word': word_length_over_six,
+        'one_syll': one_syll_percentage,
+        'avg_syll': avg_syllable,
+        'pol_syll': pol_syll_count,
+        'tot_syllables': tot_syll,
         'unique_words': unique_words,
         'lexical_diversity': lexical_diversity,
         'avg_word_length': avg_word_length
@@ -82,10 +96,14 @@ def generate_overall_score(text: str, language: Language):
                 (syn['subordination_count'] / syn['sentence_count']) * 0.25 +
                 (read['flesch_kincaid_grade'] / 12) * 0.55  # Normalize Flesch-Kincaid to a 12-grade scale
         )
-    else:
+    elif language.name == 'spanish':
         fer_huerta = 206.84 - (0.60 * lex['tot_syllables']) - 1.02 * lex['word_count']
         new_fer_huerta = (fer_huerta * -1 + 200) / 500
         difficulty_score = new_fer_huerta
+    else: #for german
+        wiener = 0.1935 * lex['pol_syll'] + 0.1672 * syn['avg_sentence_length'] + 0.1297 * lex[
+            'over_six_word'] - 0.0327 * lex['one_syll'] - 0.875
+        wiener = wiener / 30  # Normalize
 
     # Return individual metrics and an overall score
     return {

@@ -7,7 +7,8 @@ import pandas as pd
 language_to_nlp = {
     'italian': 'it_core_news_sm',
     'english': 'en_core_web_sm',
-    'spanish': 'es_core_news_sm'
+    'spanish': 'es_core_news_sm',
+    'german': 'de_core_news_sm'
 }
 
 language_to_file = {
