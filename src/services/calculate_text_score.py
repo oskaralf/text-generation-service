@@ -86,8 +86,9 @@ def generate_overall_score(text: str, language: Language):
     text = text.replace("\n", " ")
     lex = lexical_complexity(text, language)
     syn = syntactic_complexity(text, language)
+    read = readability_metrics(text)
+
     if language.name == 'english':
-        read = readability_metrics(text)
 
         # Weighted difficulty score (customizable)
         difficulty_score = (
@@ -104,7 +105,12 @@ def generate_overall_score(text: str, language: Language):
         wiener = 0.1935 * lex['pol_syll'] + 0.1672 * syn['avg_sentence_length'] + 0.1297 * lex[
             'over_six_word'] - 0.0327 * lex['one_syll'] - 0.875
         normalised_wiener = wiener / 40  # Normalize
-        difficulty_score = normalised_wiener
+        difficulty_score = (
+                (lex['lexical_diversity']) * 0.15 +  # High diversity = lower difficulty
+                (syn['avg_sentence_length'] / 25) * 0.05 +  # Normalize sentence length by a typical average (25)
+                (syn['subordination_count'] / syn['sentence_count']) * 0.25 +
+                normalised_wiener * 0.55
+        )
 
     # Return individual metrics and an overall score
     return {
