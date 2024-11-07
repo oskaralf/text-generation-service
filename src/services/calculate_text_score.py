@@ -103,7 +103,8 @@ def generate_overall_score(text: str, language: Language):
     else: #for german
         wiener = 0.1935 * lex['pol_syll'] + 0.1672 * syn['avg_sentence_length'] + 0.1297 * lex[
             'over_six_word'] - 0.0327 * lex['one_syll'] - 0.875
-        wiener = wiener / 30  # Normalize
+        normalised_wiener = wiener / 40  # Normalize
+        difficulty_score = normalised_wiener
 
     # Return individual metrics and an overall score
     return {
