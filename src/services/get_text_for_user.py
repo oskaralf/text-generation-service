@@ -28,10 +28,15 @@ assistant_text = ("You are a expert linguistic coach for people learning a new l
 english_assistant_text = ("The level is measured based on lexical diversity (unique words/ total words), "
                           "normalized flesch kincaid grade, subordinate count/sentence count and finally normalized "
                           "average sentence length. The formula is as follows: "
-                          "difficulty score = flesch_kincaid_grade/ 12) * 0.4 + (1 - lexical diversity) * 0.3 + subordination count/sentence count * 0.25 + average sentence length/ 25 * 0.05. ")
+                          "difficulty score = (flesch_kincaid_grade/ 12) * 0.55 + (lexical diversity) * 0.15 + (subordination count/sentence count) * 0.25 + average sentence length/ 25 * 0.05. ")
 
 spanish_assistant_text = ("The level is measured based on sentence length and syllable count per word in the text."
                           "The formula is as follows: 206.84 - (0.6 * syllable count) - 1.02 * word count. ")
+
+german_assistant_text = ("The level is measured based on lexical diversity (unique words/ total words), "
+                         "normalized wiener sachtextformel, subordinate count/sentence count and finally normalized "
+                         "average sentence length. The formula is as follows: "
+                         "difficulty score = (wiener sachtextformel/ 40) * 0.55 + (lexical diversity) * 0.15 + subordination count/sentence count * 0.25 + average sentence length/ 25 * 0.05. ")
 
 def generate_prompt(user, context: str, text_type: str) -> str:
     language = user.language
@@ -78,8 +83,10 @@ async def get_text_for_user(user: str, context: str, text_type: str) -> str:
 
     if user.language == "english":
         formula = english_assistant_text
-    else:
+    elif user.language == "spanish":
         formula = spanish_assistant_text
+    else:
+        formula = german_assistant_text
 
 
     messages = [
