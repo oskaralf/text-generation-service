@@ -1,5 +1,1 @@
-# text-generation-service
-sick backend af
-
-# yooooo
-code
+This is the backend service for Lectio, supplying the front-end with all logic related generation, classifications and scoring of texts. 
